@@ -22,27 +22,16 @@ jobs:
         run: |
           set -euo pipefail
 
-          destinations="$(xcodebuild \
-            -project ios/Runner.xcodeproj \
-            -scheme Runner \
-            -showdestinations 2>&1)"
+          devices="$(xcrun simctl list devices available)"
+          printf '%s\n' "$devices"
 
-          printf '%s\n' "$destinations"
-
-          simulator_id="$(printf '%s\n' "$destinations" | awk '
-            /platform:iOS Simulator/ && /name:iPhone/ && !/dvtdevice-/ {
-              match($0, /id:[^,}]+/)
-              if (RSTART > 0) {
-                value = substr($0, RSTART + 3, RLENGTH - 3)
-                gsub(/[[:space:]]/, "", value)
-                print value
-                exit
-              }
-            }
-          ')"
+          simulator_id="$(printf '%s\n' "$devices" | awk -F '[()]' '/iPhone/ { print $2; exit }')"
+          if [[ -z "$simulator_id" ]]; then
+            simulator_id="$(printf '%s\n' "$devices" | awk -F '[()]' '/iPad/ { print $2; exit }')"
+          fi
 
           if [[ -z "$simulator_id" ]]; then
-            echo "No usable iPhone iOS Simulator was found on this runner." >&2
+            echo "No usable iOS Simulator was found on this runner." >&2
             exit 1
           fi
 
