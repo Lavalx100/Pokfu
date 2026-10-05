@@ -16,12 +16,46 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
+      - name: Select an available iOS Simulator
+        id: simulator
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          destinations="$(xcodebuild \
+            -project ios/Runner.xcodeproj \
+            -scheme Runner \
+            -showdestinations 2>&1)"
+
+          printf '%s\n' "$destinations"
+
+          simulator_id="$(printf '%s\n' "$destinations" | awk '
+            /platform:iOS Simulator/ && /name:iPhone/ && !/dvtdevice-/ {
+              match($0, /id:[^,}]+/)
+              if (RSTART > 0) {
+                value = substr($0, RSTART + 3, RLENGTH - 3)
+                gsub(/[[:space:]]/, "", value)
+                print value
+                exit
+              }
+            }
+          ')"
+
+          if [[ -z "$simulator_id" ]]; then
+            echo "No usable iPhone iOS Simulator was found on this runner." >&2
+            exit 1
+          fi
+
+          echo "Using iOS Simulator: $simulator_id"
+          echo "simulator_id=$simulator_id" >> "$GITHUB_OUTPUT"
+
       - name: Build and test native app
         run: >-
           xcodebuild
           -project ios/Runner.xcodeproj
           -scheme Runner
-          -destination 'platform=iOS Simulator,name=iPhone 16 Pro,OS=latest'
+          -destination 'id=${{ steps.simulator.outputs.simulator_id }}'
+          -destination-timeout 120
           CODE_SIGNING_ALLOWED=NO
           CODE_SIGNING_REQUIRED=NO
           test
