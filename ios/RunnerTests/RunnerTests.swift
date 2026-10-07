@@ -208,6 +208,44 @@ class RunnerTests: XCTestCase {
     XCTAssertTrue(event.isArchived)
   }
 
+  @MainActor
+  func testCompletionIsPersistedBeforeStoreReloadAndSurvivesRefreshMerge() throws {
+    let applicationSupport = FileManager.default.temporaryDirectory
+      .appendingPathComponent("PokfuTests-\(UUID().uuidString)", isDirectory: true)
+    let suiteName = "PokfuTests-\(UUID().uuidString)"
+    let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
+    let persistence = PersistenceStore(
+      applicationSupportDirectory: applicationSupport,
+      defaults: defaults,
+      keychain: KeychainStore(service: "com.pokfu.tests.\(UUID().uuidString)")
+    )
+    let settings = SettingsStore(persistence: persistence)
+    let store = MoodleStore(persistence: persistence, settings: settings)
+    let event = MoodleEvent(
+      id: 99,
+      name: "Assignment 99",
+      description: "",
+      eventtype: MoodleEventType.custom.rawValue,
+      timestart: Date().addingTimeInterval(3600).epoch
+    )
+
+    defer {
+      try? FileManager.default.removeItem(at: applicationSupport)
+      defaults.removePersistentDomain(forName: suiteName)
+    }
+
+    store.addCustomEvent(event)
+    store.toggleCompletion(event)
+
+    let reloaded = MoodleStore(persistence: persistence, settings: settings)
+    XCTAssertTrue(reloaded.events.first(where: { $0.id == event.id })?.isCompleted == true)
+
+    var staleRemoteEvent = event
+    staleRemoteEvent.completed = false
+    let merged = store.mergeFetchedEvents([staleRemoteEvent])
+    XCTAssertTrue(merged.first(where: { $0.id == event.id })?.isCompleted == true)
+  }
+
   func testReminderScheduleDateSupportsRelativeTiming() {
     let eventDate = Date(timeIntervalSince1970: 1_800_000_000)
     let event = MoodleEvent(id: 2, name: "Exam", description: "", eventtype: MoodleEventType.due.rawValue, timestart: eventDate.epoch)

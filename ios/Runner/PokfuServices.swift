@@ -91,7 +91,11 @@ enum MoodleServiceError: LocalizedError {
 }
 
 final class KeychainStore {
-    private let service = PokfuBrand.bundleID
+    private let service: String
+
+    init(service: String = PokfuBrand.bundleID) {
+        self.service = service
+    }
 
     func set(_ value: String, for key: String) {
         let data = Data(value.utf8)
@@ -130,13 +134,19 @@ final class KeychainStore {
 }
 
 final class PersistenceStore {
-    let defaults = UserDefaults.standard
-    let keychain = KeychainStore()
+    let defaults: UserDefaults
+    let keychain: KeychainStore
     let applicationSupport: URL
 
-    init() {
-        let base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
-        applicationSupport = base.appendingPathComponent("Pokfu", isDirectory: true)
+    init(
+        applicationSupportDirectory: URL? = nil,
+        defaults: UserDefaults = .standard,
+        keychain: KeychainStore = KeychainStore()
+    ) {
+        self.defaults = defaults
+        self.keychain = keychain
+        let base = applicationSupportDirectory ?? FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0].appendingPathComponent("Pokfu", isDirectory: true)
+        applicationSupport = base
         try? FileManager.default.createDirectory(at: applicationSupport, withIntermediateDirectories: true)
         migrateLegacySecrets()
         migrateLegacyCaches()
@@ -824,7 +834,6 @@ final class MoodleStore: ObservableObject {
     let settings: SettingsStore
     private let auth = MoodleAuthCoordinator()
     private var lastEventFetch: Date?
-    private let eventPersistenceQueue = DispatchQueue(label: "com.pokfu.events.persistence", qos: .utility)
 
     init(persistence: PersistenceStore, settings: SettingsStore) {
         self.persistence = persistence
@@ -944,11 +953,17 @@ final class MoodleStore: ObservableObject {
         }
     }
 
-    private func mergeFetchedEvents(_ fetched: [MoodleEvent]) -> [MoodleEvent] {
+    func mergeFetchedEvents(_ fetched: [MoodleEvent]) -> [MoodleEvent] {
         let previousByID = Dictionary(uniqueKeysWithValues: events.map { ($0.id, $0) })
         var refreshed = fetched.map { event in
             var event = event
-            event.archived = previousByID[event.id]?.archived
+            if let previous = previousByID[event.id] {
+                // Completion and archive state are local user actions. Moodle
+                // can lag behind the UI action, so a refresh must not erase a
+                // state that was already saved on this device.
+                event.completed = previous.completed ?? event.completed
+                event.archived = previous.archived ?? event.archived
+            }
             return event
         }
         let fetchedIDs = Set(fetched.map(\.id))
@@ -1336,12 +1351,10 @@ final class MoodleStore: ObservableObject {
     }
 
     private func saveEvents() {
-        let snapshot = events
-        let destination = persistence.applicationSupport.appendingPathComponent("\(MoodleStorageKey.events).json")
-        eventPersistenceQueue.async {
-            guard let data = try? JSONEncoder().encode(snapshot) else { return }
-            try? data.write(to: destination, options: .atomic)
-        }
+        // Completion and archive changes must be durable before the action
+        // returns. An async write can be lost when the user immediately
+        // backgrounds or terminates the app.
+        persistence.saveStringListJSON(events, for: MoodleStorageKey.events)
         WidgetBridge.shared.update(events: events, courses: courses)
     }
 }
