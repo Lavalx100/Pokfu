@@ -13,7 +13,7 @@
 		A1B2C3D4E5F60718293A4B5F /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60718293A4B5E /* PrivacyInfo.xcprivacy */; };
 		B0B0B0B0B0B0B0B0B0B0B001 /* PokfuApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0B0B0B0B0B0B0B0B0B0B101 /* PokfuApp.swift */; };
 		B0B0B0B0B0B0B0B0B0B0B002 /* PokfuModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0B0B0B0B0B0B0B0B0B0B102 /* PokfuModels.swift */; };
-		B0B0B0B0B0B0B0B0B0B0B003 /* PokfuServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0B0B0B0B0B0B0B0B0B0B103 /* PokfuServices.swift */; };
+		B0B0B0B0B0B0B0B0B0B0B003 /* PokfuPersistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0B0B0B0B0B0B0B0B0B0B103 /* PokfuPersistence.swift */; };
 		B0B0B0B0B0B0B0B0B0B0B004 /* PokfuViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0B0B0B0B0B0B0B0B0B0B104 /* PokfuViews.swift */; };
 		D0F430832C4F8AF000C3DCFA /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0F430822C4F8AF000C3DCFA /* WidgetKit.framework */; };
 		D0F430852C4F8AF000C3DCFA /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0F430842C4F8AF000C3DCFA /* SwiftUI.framework */; };
@@ -23,6 +23,12 @@
 		D0F4308E2C4F8AF000C3DCFA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0F4308D2C4F8AF000C3DCFA /* Assets.xcassets */; };
 		D0F430922C4F8AF000C3DCFA /* EventWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = D0F430812C4F8AF000C3DCFA /* EventWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		D0F430B32C50A64400C3DCFA /* CommonUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F430B12C50A52300C3DCFA /* CommonUtils.swift */; };
+		F01000000000000000000001 /* AIProviderServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = F01000000000000000000101 /* AIProviderServices.swift */; };
+		F01000000000000000000002 /* MoodleAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F01000000000000000000102 /* MoodleAPIService.swift */; };
+		F01000000000000000000003 /* PokfuSettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F01000000000000000000103 /* PokfuSettingsStore.swift */; };
+		F01000000000000000000004 /* MoodleStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F01000000000000000000104 /* MoodleStore.swift */; };
+		F01000000000000000000005 /* MoodleTutorServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = F01000000000000000000105 /* MoodleTutorServices.swift */; };
+		F01000000000000000000006 /* ReminderServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = F01000000000000000000106 /* ReminderServices.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,7 +82,7 @@
 		A1B2C3D4E5F60718293A4B5E /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		B0B0B0B0B0B0B0B0B0B0B101 /* PokfuApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokfuApp.swift; sourceTree = "<group>"; };
 		B0B0B0B0B0B0B0B0B0B0B102 /* PokfuModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokfuModels.swift; sourceTree = "<group>"; };
-		B0B0B0B0B0B0B0B0B0B0B103 /* PokfuServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokfuServices.swift; sourceTree = "<group>"; };
+		B0B0B0B0B0B0B0B0B0B0B103 /* PokfuPersistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokfuPersistence.swift; sourceTree = "<group>"; };
 		B0B0B0B0B0B0B0B0B0B0B104 /* PokfuViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokfuViews.swift; sourceTree = "<group>"; };
 		D0707CB32BD16C100066652C /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
 		D0F430812C4F8AF000C3DCFA /* EventWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = EventWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -89,6 +95,12 @@
 		D0F4308F2C4F8AF000C3DCFA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D0F430982C4F8B6000C3DCFA /* EventWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = EventWidgetExtension.entitlements; sourceTree = "<group>"; };
 		D0F430B12C50A52300C3DCFA /* CommonUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonUtils.swift; sourceTree = "<group>"; };
+		F01000000000000000000101 /* AIProviderServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIProviderServices.swift; sourceTree = "<group>"; };
+		F01000000000000000000102 /* MoodleAPIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodleAPIService.swift; sourceTree = "<group>"; };
+		F01000000000000000000103 /* PokfuSettingsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokfuSettingsStore.swift; sourceTree = "<group>"; };
+		F01000000000000000000104 /* MoodleStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodleStore.swift; sourceTree = "<group>"; };
+		F01000000000000000000105 /* MoodleTutorServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodleTutorServices.swift; sourceTree = "<group>"; };
+		F01000000000000000000106 /* ReminderServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderServices.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -157,7 +169,13 @@
 				A1B2C3D4E5F60718293A4B5C /* PrivacyInfo.xcprivacy */,
 				B0B0B0B0B0B0B0B0B0B0B101 /* PokfuApp.swift */,
 				B0B0B0B0B0B0B0B0B0B0B102 /* PokfuModels.swift */,
-				B0B0B0B0B0B0B0B0B0B0B103 /* PokfuServices.swift */,
+				B0B0B0B0B0B0B0B0B0B0B103 /* PokfuPersistence.swift */,
+				F01000000000000000000101 /* AIProviderServices.swift */,
+				F01000000000000000000102 /* MoodleAPIService.swift */,
+				F01000000000000000000103 /* PokfuSettingsStore.swift */,
+				F01000000000000000000104 /* MoodleStore.swift */,
+				F01000000000000000000105 /* MoodleTutorServices.swift */,
+				F01000000000000000000106 /* ReminderServices.swift */,
 				B0B0B0B0B0B0B0B0B0B0B104 /* PokfuViews.swift */,
 			);
 			path = Runner;
@@ -331,7 +349,13 @@
 			files = (
 				B0B0B0B0B0B0B0B0B0B0B001 /* PokfuApp.swift in Sources */,
 				B0B0B0B0B0B0B0B0B0B0B002 /* PokfuModels.swift in Sources */,
-				B0B0B0B0B0B0B0B0B0B0B003 /* PokfuServices.swift in Sources */,
+				B0B0B0B0B0B0B0B0B0B0B003 /* PokfuPersistence.swift in Sources */,
+				F01000000000000000000001 /* AIProviderServices.swift in Sources */,
+				F01000000000000000000002 /* MoodleAPIService.swift in Sources */,
+				F01000000000000000000003 /* PokfuSettingsStore.swift in Sources */,
+				F01000000000000000000004 /* MoodleStore.swift in Sources */,
+				F01000000000000000000005 /* MoodleTutorServices.swift in Sources */,
+				F01000000000000000000006 /* ReminderServices.swift in Sources */,
 				B0B0B0B0B0B0B0B0B0B0B004 /* PokfuViews.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
