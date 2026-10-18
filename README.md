@@ -8,7 +8,14 @@ helps students see deadlines, browse courses, review grades, plan calendars,
 create reminders, and study course material from a Moodle account.
 
 The default configuration targets HKU Moodle. The native service layer lives
-in `ios/Runner/PokfuServices.swift` and can be adapted to another Moodle host.
+under `ios/Runner/` and can be adapted to another Moodle host.
+
+## Screenshot
+
+The App Store preview below shows the events screen on iPhone. Additional
+iPhone and iPad captures are in [`docs/app-store`](./docs/app-store/).
+
+![Pokfu events screen on iPhone](./docs/app-store/pokfu-iphone-6.9-events.jpg)
 
 ## Run locally
 
